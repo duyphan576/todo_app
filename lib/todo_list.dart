@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'todo_controller.dart';
 
 class TodoList extends StatelessWidget {
-  final todoController = Get.find<TodoController>();
+  final todoController = Get.put(TodoController());
 
   @override
   Widget build(BuildContext context) {

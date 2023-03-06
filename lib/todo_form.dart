@@ -4,7 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'todo_controller.dart';
 
 class TodoForm extends HookWidget {
-  final todoController = Get.put(TodoController());
+  final todoController = Get.find<TodoController>();
 
   @override
   Widget build(BuildContext context) {
