@@ -6,7 +6,20 @@ class Todo {
 
   Todo({
     required this.text,
-    bool completed = false,
-  }) : completed = completed.obs ;
-}
+    required this.completed,
+  });
 
+  Map<String, dynamic> toMap() {
+    return {
+      'text': text,
+      'completed': completed.value,
+    };
+  }
+
+  factory Todo.fromMap(Map<String, dynamic> map) {
+    return Todo(
+      text: map['text'],
+      completed: RxBool(map['completed']),
+    );
+  }
+}

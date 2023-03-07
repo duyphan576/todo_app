@@ -1,29 +1,48 @@
 import 'package:get/get.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter/material.dart';
-import 'package:get/state_manager.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'todo_model.dart';
+import 'dart:convert';
 
 class TodoController extends GetxController {
-  final todos = <Todo>[].obs;
+  var todos = <Todo>[].obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    _loadTodos();
+  }
 
   void add(String text) {
-    todos.add(Todo(text: text));
+    todos.add(Todo(
+      text: text,
+      completed: false.obs,
+    ));
+    _saveTodos();
   }
 
   void remove(int index) {
     todos.removeAt(index);
+    _saveTodos();
   }
 
   void toggle(int index) {
     todos[index].completed.toggle();
     todos[index].completed.refresh();
-    print('Todo completed state updated: ${todos[index].completed.value}');
+    _saveTodos();
   }
 
+  void _saveTodos() async {
+    final prefs = await SharedPreferences.getInstance();
+    final todoList = todos.map((todo) => todo.toMap()).toList();
+    await prefs.setString('todos', jsonEncode(todoList));
+  }
 
-  void clear() {
-    todos.clear();
+  void _loadTodos() async {
+    final prefs = await SharedPreferences.getInstance();
+    final todoList = prefs.getString('todos');
+    if (todoList != null) {
+      final decoded = jsonDecode(todoList) as List<dynamic>;
+      todos.assignAll(decoded.map((todo) => Todo.fromMap(todo)).toList());
+    }
   }
 }
