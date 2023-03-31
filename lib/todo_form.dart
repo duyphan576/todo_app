@@ -29,6 +29,7 @@ class TodoForm extends HookWidget {
                   todoController.add(textController.text);
                   textController.clear();
                 }
+                Get.back();
               },
             ),
           ],
